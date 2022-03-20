@@ -85,7 +85,8 @@ class Components:
     
     @pc.setter
     def pc(self, pc):
-        pc = pc.zfill(12)
+        if pc is not None:
+            pc = pc.zfill(12)
         self._pc.value = pc
 
 
@@ -97,7 +98,8 @@ class Components:
     
     @mar.setter
     def mar(self, mar):
-        mar = mar.zfill(12)
+        if mar is not None:
+            mar = mar.zfill(12)
         self._mar.value = mar
 
 
@@ -109,7 +111,8 @@ class Components:
     
     @mbr.setter
     def mbr(self, mbr):
-        mbr = mbr.zfill(16)
+        if mbr is not None:
+            mbr = mbr.zfill(16)
         self._mbr.value = mbr
 
 
@@ -121,7 +124,8 @@ class Components:
     
     @mfr.setter
     def mfr(self, mfr):
-        mfr = mfr.zfill(4)
+        if mfr is not None:
+            mfr = mfr.zfill(4)
         self._mfr.value = mfr
 
 
@@ -133,8 +137,23 @@ class Components:
     
     @ir.setter
     def ir(self, ir):
-        ir = ir.zfill(16)
+        if ir is not None:
+            ir = ir.zfill(16)
         self._ir.value = ir
+
+
+    def reset(self):
+        for gpr in self._gpr:
+            gpr.value = None
+        for ixr in self._ixr:
+            ixr.value = None
+        self.pc = None
+        self.mar = None
+        self.mbr = None
+        self.ir = None
+        self.mfr = None
+        self.cache.clear_cache()
+        self.memory.reset_memory()
 
 
     def test(self):
@@ -144,6 +163,3 @@ class Components:
         print("****************")
         for ixr in self.ixr:
             print(ixr)
-
-
-c = Components()

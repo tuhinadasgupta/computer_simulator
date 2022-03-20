@@ -61,5 +61,3 @@ class Devices:
         for device in self.other_devices:
             print(str(i) + " " + "device: " + str(device))
             i+=1
-
-    

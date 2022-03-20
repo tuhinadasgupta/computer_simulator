@@ -362,7 +362,12 @@ class CU:
         opcode = oct(int(instruction[:6], 2))[2:]
         self.instructions.get(opcode)(instruction)
 
+
+    def reset(self):
+        self.components.reset()
+        self.alu.reset_cc("OVERFLOW", "UNDERFLOW", "DIVZERO", "EQUALORNOT")
     
+
     def test(self):
         self.components.gpr_setter("00", "1011001100000000")
         self.components.gpr_setter("01", "111111111111")

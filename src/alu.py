@@ -24,15 +24,16 @@ class ALU:
             self._condition_code[3] = 1
 
     
-    def reset_cc(self, condition):
-        if condition == "OVERFLOW":
-            self._condition_code[0] = 0
-        elif condition == "UNDERFLOW":
-            self._condition_code[1] = 0
-        elif condition == "DIVZERO":
-            self._condition_code[2] = 0
-        elif condition == "EQUALORNOT":
-            self._condition_code[3] = 0
+    def reset_cc(self, *argv):
+        for condition in argv:
+            if condition == "OVERFLOW":
+                self._condition_code[0] = 0
+            elif condition == "UNDERFLOW":
+                self._condition_code[1] = 0
+            elif condition == "DIVZERO":
+                self._condition_code[2] = 0
+            elif condition == "EQUALORNOT":
+                self._condition_code[3] = 0
 
 
     # x and y are binary value
@@ -171,3 +172,4 @@ class ALU:
         res = ''.join(value_list_right) + ''.join(value_list_left)
         res = res.zfill(16)
         return res
+        

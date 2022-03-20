@@ -35,3 +35,8 @@ class Memory:
     @expend_memory.setter
     def expend_memory(self):
         self.is_expended = True
+
+    
+    def reset_memory(self):
+        self.memory.clear()
+        

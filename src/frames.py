@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class GPR_AND_IXR(ttk.Frame):
+class GprAndIxr(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
@@ -73,7 +73,7 @@ class GPR_AND_IXR(ttk.Frame):
         self.controller = controller
 
 
-class OTHER_MACHINE_REGISTERS(ttk.Frame):
+class OtherMachineRegisters(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
@@ -179,7 +179,7 @@ class SWITCH(ttk.Frame):
         self.controller = controller
 
 
-class FUNCTION_BUTTONS(ttk.Frame):
+class FunctionButtons(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 

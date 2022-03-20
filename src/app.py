@@ -1,4 +1,3 @@
-import tkinter as tk
 from frames import *
 from control_unit import ControlUnit
 from interaction import Interaction
@@ -11,16 +10,16 @@ class App(tk.Tk):
         self.title("Machine Simulator")
         self.resizable(False, False)
 
-        gpr_and_ixr = GPR_AND_IXR(self)
+        gpr_and_ixr = GprAndIxr(self)
         gpr_and_ixr.grid(column=0, row=0, padx="10", pady="10")
 
-        other_machine_registers = OTHER_MACHINE_REGISTERS(self)
+        other_machine_registers = OtherMachineRegisters(self)
         other_machine_registers.grid(column=1, row=0, padx="10", pady="10")
 
         switch = SWITCH(self)
         switch.grid(column=0, row=1, padx="10", pady="10")
 
-        function_buttons = FUNCTION_BUTTONS(self)
+        function_buttons = FunctionButtons(self)
         function_buttons.grid(column=1, row=1, padx="10", pady="10")
 
         control_unit = ControlUnit()

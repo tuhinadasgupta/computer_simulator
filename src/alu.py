@@ -83,11 +83,13 @@ class ALU:
             self.set_cc("DIVZERO")
 
     # If two value is equal
-    def is_equal(self, x, y):
+    @staticmethod
+    def is_equal(x, y):
         return True if x == y else False
 
     # logical and method:
-    def logical_and(self, x, y):
+    @staticmethod
+    def logical_and(x, y):
         # ask for, or and not operator
         z = ''.join(str(int(i) & int(j))for i, j in zip(x, y)).zfill(16)
         # z = bin(int(x, 2) & int(y, 2))[2:].zfill(16)
@@ -96,8 +98,8 @@ class ALU:
         return z
 
     # logical or method:
-
-    def logical_or(self, x, y):
+    @staticmethod
+    def logical_or(x, y):
         z = ''.join(str(int(i) | int(j))for i, j in zip(x, y)).zfill(16)
         # z = bin(int(x,2) | int(y,2))[2:].zfill(16)
         # lazy evaluation
@@ -105,7 +107,8 @@ class ALU:
         return z
 
     # logical not method:
-    def logical_not(self, x):
+    @staticmethod
+    def logical_not(x):
         # z = bin(~int(x))
         res_int = []
         for i in x:
@@ -142,9 +145,12 @@ class ALU:
                 return value
 
     # rotate method:
-    def rotate(self, value, count, l_r):
+    @staticmethod
+    def rotate(value, count, l_r):
         count = int(count, 2)
         value_list = list(value)
+        value_list_left = None
+        value_list_right = None
         # r = 10111010 count = 2
         # r_left = 10 r_right = 111010
         # left (l_r = 1)

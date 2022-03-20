@@ -5,22 +5,22 @@
 #
 # 2. Trap instruction:                          011000 -- -- - 00000
 #
-# 3. Load/Store instuction:                     xxxxxx xx xx x xxxxx
+# 3. Load/Store instruction:                     xxxxxx xx xx x xxxxx
 #                                               Opcode R  IX I Address
 #
-# 3. Transfer instuction:                       xxxxxx xx [xx] [x] xxxxx
+# 3. Transfer instruction:                       xxxxxx xx [xx] [x] xxxxx
 #                                               Opcode R   IX   I  Address
 #
-# 4. Immediate instuction:                      xxxxxx xx -- - xxxxx
+# 4. Immediate instruction:                      xxxxxx xx -- - xxxxx
 #                                               Opcode R  -- - immed
 #
-# 5. Arithmetic and Logical instuction:         xxxxxx xx xx - -----
+# 5. Arithmetic and Logical instruction:         xxxxxx xx xx - -----
 #                                               Opcode Rx Ry - -----
 #
-# 5. Shift and Lotate instruction:              xxxxxx xx x    x   -- xxxx
+# 5. Shift and Rotate instruction:              xxxxxx xx x    x   -- xxxx
 #                                               Opcode R  A/L  L/R -- Count
 #
-# 6. IO operation instuction:                   xxxxxx xx -- - xxxxx
+# 6. IO operation instruction:                   xxxxxx xx -- - xxxxx
 #                                               Opcode R  -- - DevID
 ################################################################################
 
@@ -67,9 +67,8 @@ class ControlUnit:
             63: self.CHK,
         }
 
-    # calulate effective address
+    # calculate effective address
     def _calculate_ea(self, instruction):
-        ea = 0
         if instruction[8:10] == "00":
             ea = instruction[11:16]
         else:

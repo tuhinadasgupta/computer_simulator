@@ -29,8 +29,8 @@ class Memory:
 
     # expending the memory and set the flag to true.
     @expend_memory.setter
-    def expend_memory(self):
-        self.is_expended = True
+    def expend_memory(self, flag):
+        self.is_expended = flag
 
     def reset_memory(self):
         self.memory.clear()

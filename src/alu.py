@@ -6,12 +6,10 @@ class ALU:
         # 1 -> UNDERFLOW -> 0100
         # 2 -> DIVZERO -> 0010
         # 3 -> EQUALORNOT -> 0001
-        self._condition_code = [0,0,0,0]
-
+        self._condition_code = [0, 0, 0, 0]
 
     def get_cc(self):
         return self._condition_code
-
 
     def set_cc(self, condition):
         if condition == "OVERFLOW":
@@ -23,7 +21,6 @@ class ALU:
         elif condition == "EQUALORNOT":
             self._condition_code[3] = 1
 
-    
     def reset_cc(self, *argv):
         for condition in argv:
             if condition == "OVERFLOW":
@@ -34,7 +31,6 @@ class ALU:
                 self._condition_code[2] = 0
             elif condition == "EQUALORNOT":
                 self._condition_code[3] = 0
-
 
     # x and y are binary value
     # addition method:
@@ -48,8 +44,6 @@ class ALU:
         else:
             z = bin(z)[2:].zfill(16)
             return z
-            
-
 
     # subtraction method:
     def sub(self, x, y):
@@ -62,7 +56,6 @@ class ALU:
         else:
             z = bin(z)[2:].zfill(16)
             return z
-
 
     # multiplication method:
     def mlt(self, x, y):
@@ -78,7 +71,6 @@ class ALU:
             zl = z[16:32]
             return zh, zl
 
-
     # division method:
     def div(self, x, y):
         # // -> Floor division, / -> division
@@ -89,31 +81,28 @@ class ALU:
         except ZeroDivisionError:
             # will return None
             self.set_cc("DIVZERO")
-            
 
     # If two value is equal
     def is_equal(self, x, y):
         return True if x == y else False
 
-    
     # logical and method:
     def logical_and(self, x, y):
         # ask for, or and not operator
-        z = ''.join(str(int(i) & int(j))for i,j in zip(x, y)).zfill(16)
+        z = ''.join(str(int(i) & int(j))for i, j in zip(x, y)).zfill(16)
         # z = bin(int(x, 2) & int(y, 2))[2:].zfill(16)
         # lazy evaluation
         # d = bin(int(x,2) and int(y,2))
         return z
 
-    
     # logical or method:
+
     def logical_or(self, x, y):
-        z = ''.join(str(int(i) | int(j))for i,j in zip(x, y)).zfill(16)
+        z = ''.join(str(int(i) | int(j))for i, j in zip(x, y)).zfill(16)
         # z = bin(int(x,2) | int(y,2))[2:].zfill(16)
         # lazy evaluation
         # d = bin(int(x,2) or int(y,2))
         return z
-
 
     # logical not method:
     def logical_not(self, x):
@@ -124,7 +113,6 @@ class ALU:
         z = ''.join(str(int(i)) for i in res_int).zfill(16)
         return z
 
-    
     # shift method:
     def shift(self, value, count, l_r, a_l):
         # Arithmetic Shift (a_l = 0)
@@ -138,7 +126,7 @@ class ALU:
             elif l_r == "0":
                 value = bin(int(value, 2) >> count)
 
-        # Logical Shift (a_l = 1) 
+        # Logical Shift (a_l = 1)
         elif a_l == "1":
             # left (l_r =1)
             if l_r == "1":
@@ -153,20 +141,19 @@ class ALU:
             else:
                 return value
 
-
     # rotate method:
     def rotate(self, value, count, l_r):
         count = int(count, 2)
         value_list = list(value)
         # r = 10111010 count = 2
         # r_left = 10 r_right = 111010
-        # left (l_r = 1) 
+        # left (l_r = 1)
         if l_r == "1":
-            value_list_left = value_list[0:count] 
+            value_list_left = value_list[0:count]
             value_list_right = value_list[count:]
         # right (l_r = 0)
         elif l_r == "0":
-            value_list_left = value_list[0:len(value_list)-count] 
+            value_list_left = value_list[0:len(value_list)-count]
             value_list_right = value_list[len(value_list)-count:]
 
         res = ''.join(value_list_right) + ''.join(value_list_left)

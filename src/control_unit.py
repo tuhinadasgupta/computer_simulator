@@ -30,7 +30,7 @@ from components import Components
 from devices import Devices
 
 
-class CU:
+class ControlUnit:
     def __init__(self) -> None:
         self.alu = ALU()
         self.components = Components()
@@ -67,24 +67,21 @@ class CU:
             63: self.CHK,
         }
 
-
     # calulate effective address
     def _calculate_ea(self, instruction):
         ea = 0
         if instruction[8:10] == "00":
             ea = instruction[11:16]
         else:
-            ea = bin(int(instruction[11:16], 2) + \
-                int(self.components.ixr_getter(instruction[8:10]), 2))[2:].zfill(5)
+            ea = bin(int(instruction[11:16], 2) +
+                     int(self.components.ixr_getter(instruction[8:10]), 2))[2:].zfill(5)
         if instruction[10] == "1":
             ea = self.components.memory.get_memory(ea)
         print("EA: " + str(ea))
         return ea
 
-
     def HLT(self):
         pass
-
 
     def LDR(self, instruction):
         ea = self._calculate_ea(instruction)
@@ -92,19 +89,16 @@ class CU:
         value = self.components.memory.get_memory(ea)
         self.components.gpr_setter(r, value)
 
-
     def STR(self, instruction):
         ea = self._calculate_ea(instruction)
         r = instruction[6:8]
         value = self.components.gpr_getter(r)
         self.components.memory.set_memory(ea, value)
 
-
     def LDA(self, instruction):
         ea = self._calculate_ea(instruction).zfill(16)
         r = instruction[6:8]
         self.components.gpr_setter(r, ea)
-
 
     def AMR(self, instruction):
         ea = self._calculate_ea(instruction)
@@ -118,7 +112,6 @@ class CU:
             # TODO Halt the program
             pass
 
-
     def SMR(self, instruction):
         ea = self._calculate_ea(instruction)
         r = instruction[6:8]
@@ -130,7 +123,6 @@ class CU:
         else:
             # TODO Halt the program
             pass
-        
 
     def AIR(self, instruction):
         immed = instruction[11:16]
@@ -143,7 +135,6 @@ class CU:
             # TODO Halt the program
             pass
 
-
     def SIR(self):
         immed = instruction[11:16]
         r = instruction[6:8]
@@ -155,7 +146,6 @@ class CU:
             # TODO Halt the program
             pass
 
-
     def JZ(self, instruction):
         ea = self._calculate_ea(instruction)
         r = instruction[6:8]
@@ -165,7 +155,6 @@ class CU:
         else:
             pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
             self.components.pc = pc
-
 
     def JNE(self, instruction):
         ea = self._calculate_ea(instruction)
@@ -177,7 +166,6 @@ class CU:
             pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
             self.components.pc = pc
 
-
     def JCC(self, instruction):
         ea = self._calculate_ea(instruction)
         ix = int(instruction[6:8], 2)
@@ -188,11 +176,9 @@ class CU:
             pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
             self.components.pc = pc
 
-
     def JMA(self, instruction):
         ea = self._calculate_ea(instruction)
         self.components.pc = ea
-
 
     def JSR(self, instruction):
         ea = self._calculate_ea(instruction)
@@ -201,7 +187,6 @@ class CU:
         self.components.gpr_setter(r, value)
         self.components.pc = ea
 
-
     def RFS(self, instruction):
         immed = instruction[11:16]
         r0 = "00"
@@ -209,7 +194,6 @@ class CU:
         value = self.components.gpr_getter(r3)
         self.components.gpr_setter(r0, immed)
         self.components.pc = value
-
 
     def SOB(self, instruction):
         ea = self._calculate_ea(instruction)
@@ -223,7 +207,6 @@ class CU:
             pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
             self.components.pc = pc
 
-
     def JGE(self, instruction):
         ea = self._calculate_ea(instruction)
         r = instruction[6:8]
@@ -233,7 +216,6 @@ class CU:
         else:
             pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
             self.components.pc = pc
-
 
     def MLT(self, instruction):
         rx = instruction[6:8]
@@ -254,7 +236,6 @@ class CU:
             # TODO: set the trap code
             pass
 
-
     def DVD(self, instruction):
         rx = instruction[6:8]
         ry = instruction[8:10]
@@ -274,7 +255,6 @@ class CU:
             # TODO: set the trap code
             pass
 
-
     def TRR(self, instruction):
         rx = instruction[6:8]
         ry = instruction[8:10]
@@ -285,7 +265,6 @@ class CU:
         else:
             self.alu.reset_cc("EQUALORNOT")
 
-
     def AND(self, instruction):
         rx = instruction[6:8]
         ry = instruction[8:10]
@@ -293,7 +272,6 @@ class CU:
         y = self.components.gpr_getter(ry)
         value = self.alu.logical_and(x, y)
         self.components.gpr_setter(rx, value)
-
 
     def ORR(self, instruction):
         rx = instruction[6:8]
@@ -303,13 +281,11 @@ class CU:
         value = self.alu.logical_or(x, y)
         self.components.gpr_setter(rx, value)
 
-
     def NOT(self, instruction):
         rx = instruction[6:8]
         x = self.components.gpr_getter(rx)
         value = self.alu.logical_not(x)
         self.components.gpr_setter(rx, value)
-
 
     def SRC(self, instruction):
         r = instruction[6:8]
@@ -320,7 +296,6 @@ class CU:
         value_shifted = self.alu.shift(value, count, l_r, a_l)
         self.components.gpr_setter(r, value_shifted)
 
-
     def RRC(self, instruction):
         r = instruction[6:8]
         l_r = instruction[9]
@@ -329,13 +304,11 @@ class CU:
         value_rotated = self.alu.rotate(value, count, l_r)
         self.components.gpr_setter(r, value_rotated)
 
-
     def LDX(self, instruction):
         ea = self._calculate_ea(instruction)
         ixr = instruction[8:10]
         value = self.components.memory.get_memory(ea)
         self.components.ixr_setter(ixr, value)
-
 
     def STX(self, instruction):
         ea = self._calculate_ea(instruction)
@@ -343,30 +316,24 @@ class CU:
         value = self.components.ixr_getter(ixr)
         self.components.memory.set_memory(ea, value)
 
-
     # TODO: all about devices.
     def IN(self, instruction):
         pass
 
-
     def OUT(self):
         pass
 
-
     def CHK(self):
         pass
-    
 
     def instruction_decoder(self, instruction):
         # ea = self._calculate_ea(instruction)
         opcode = oct(int(instruction[:6], 2))[2:]
         self.instructions.get(opcode)(instruction)
 
-
     def reset(self):
         self.components.reset()
         self.alu.reset_cc("OVERFLOW", "UNDERFLOW", "DIVZERO", "EQUALORNOT")
-    
 
     def test(self):
         self.components.gpr_setter("00", "1011001100000000")
@@ -376,5 +343,5 @@ class CU:
         return self.alu.rotate(x, "10", "1")
 
 
-instruction = CU()
+instruction = ControlUnit()
 instruction.instruction_decoder("100001111100")

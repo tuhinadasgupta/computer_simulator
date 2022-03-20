@@ -13,7 +13,6 @@ class Cache:
     def __init__(self) -> None:
         self.cache = Queue(maxsize=16)
 
-
     # get method
     def get_cache(self, location):
         # return the value at that location,
@@ -21,7 +20,7 @@ class Cache:
         for cache in self.cache.queue:
             if location in cache.keys():
                 return cache[location]
-    
+
     # set method
     def set_cache(self, location, value):
         # check if the cache is full
@@ -35,8 +34,7 @@ class Cache:
                 cache[location] = value
                 return
         # if none of above if true, just update the cache.
-        self.cache.put({location:value})
-
+        self.cache.put({location: value})
 
     # clear the cache.
     def clear_cache(self):
@@ -47,9 +45,7 @@ class Cache:
                 continue
             self.cache.task_done()
 
-
     # cache iteration.
     def print_cache(self):
         for cache in self.cache.queue:
             print(cache)
-       

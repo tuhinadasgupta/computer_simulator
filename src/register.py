@@ -31,4 +31,4 @@ class Register:
     @size.setter
     def size(self, size):
         self._size = size
-        
+ 

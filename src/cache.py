@@ -52,4 +52,4 @@ class Cache:
     def print_cache(self):
         for cache in self.cache.queue:
             print(cache)
-            
+       

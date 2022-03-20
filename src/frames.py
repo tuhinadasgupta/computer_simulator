@@ -157,4 +157,3 @@ class FUNCTION_BUTTONS(ttk.Frame):
 
         halt_frame.grid(column=2, row=1)
         run_frame.grid(column=3, row=1)
-        

@@ -39,4 +39,3 @@ class Memory:
     
     def reset_memory(self):
         self.memory.clear()
-        

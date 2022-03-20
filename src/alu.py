@@ -172,4 +172,3 @@ class ALU:
         res = ''.join(value_list_right) + ''.join(value_list_left)
         res = res.zfill(16)
         return res
-        

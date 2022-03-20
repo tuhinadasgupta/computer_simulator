@@ -188,7 +188,7 @@ class FUNCTION_BUTTONS(ttk.Frame):
         tk.Button(self, text="Store", width=5).grid(column=0, row=0)
         tk.Button(self, text="S+", width=5).grid(column=1, row=0)
         tk.Button(self, text="Load", width=5).grid(column=2, row=0)
-        tk.Button(self, text="Init", width=5).grid(column=3, row=0)
+        tk.Button(self, text="Init", width=5, command=self.init).grid(column=3, row=0)
         tk.Button(self, text="SS", width=5).grid(column=0, row=1)
         tk.Button(self, text="Run", width=5).grid(column=1, row=1)
 
@@ -204,6 +204,10 @@ class FUNCTION_BUTTONS(ttk.Frame):
 
         halt_frame.grid(column=2, row=1)
         run_frame.grid(column=3, row=1)
+
+    def init(self):
+        if self.controller:
+            self.controller.init()
 
     def set_controller(self, controller):
         """

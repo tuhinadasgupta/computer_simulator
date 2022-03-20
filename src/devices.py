@@ -8,35 +8,35 @@
 
 
 class Devices:
-    def __init__(self) -> None:
-        self.keyboard = None
-        self.printer = None
-        self.card_reader = None
+    def __init__(self):
+        self._keyboard = None
+        self._printer = None
+        self._card_reader = None
         self.other_devices = [None]*29
 
     @property
     def keyboard(self):
-        return self.keyboard
+        return self._keyboard
 
     @keyboard.setter
     def keyboard(self, keyboard):
-        self.keyboard = keyboard
+        self._keyboard = keyboard
 
     @property
     def printer(self):
-        return self.printer
+        return self._printer
 
     @printer.setter
     def printer(self, printer):
-        self.printer = printer
+        self._printer = printer
 
     @property
     def card_reader(self):
-        return self.card_reader
+        return self._card_reader
 
     @card_reader.setter
     def card_reader(self, card_reader):
-        self.card_reader = card_reader
+        self._card_reader = card_reader
 
     def get_other_device(self, index):
         return self.other_devices[index]

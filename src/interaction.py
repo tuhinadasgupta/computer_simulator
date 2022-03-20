@@ -1,5 +1,4 @@
-from control_unit import CU
-from frames import *
+from tkinter import filedialog as fd
 
 
 class Interaction:
@@ -9,3 +8,26 @@ class Interaction:
         self.other_machine_registers = other_machine_registers
         self.switch = switch
         self.function_buttons = function_buttons
+
+    def init(self):
+        filetypes = (
+            ('text files', '*.txt'),
+            ('All files', '*.*')
+        )
+
+        filename = fd.askopenfilename(
+            title='Open a file',
+            initialdir='/',
+            filetypes=filetypes)
+
+        dataframe = {}
+
+        with open(filename, 'r') as f:
+            for line in f.readlines():
+                address, value = line.split(" ")
+                address = bin(int(address, 16))[2:].zfill(16)
+                value = bin(int(value, 16))[2:].zfill(16)
+                dataframe[address] = value
+
+        for location, value in dataframe.items():
+            self.control_unit.components.memory.set_memory(location, value)

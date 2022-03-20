@@ -135,7 +135,7 @@ class ControlUnit:
             # TODO Halt the program
             pass
 
-    def SIR(self):
+    def SIR(self, instruction):
         immed = instruction[11:16]
         r = instruction[6:8]
         x = self.components.gpr_getter(r)
@@ -341,7 +341,3 @@ class ControlUnit:
         x = self.components.gpr_getter("00")
         y = self.components.gpr_getter("01")
         return self.alu.rotate(x, "10", "1")
-
-
-instruction = ControlUnit()
-instruction.instruction_decoder("100001111100")

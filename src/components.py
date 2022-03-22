@@ -1,6 +1,7 @@
 from memory import Memory
 from cache import Cache
 from register import Register
+from devices import Devices
 
 
 class Components:
@@ -11,6 +12,9 @@ class Components:
 
         # Cache
         self.cache = Cache()
+
+        # Devices
+        self.devices = Devices()
 
         # CPU
         # general purpose register

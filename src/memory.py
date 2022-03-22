@@ -23,6 +23,7 @@ class Memory:
 
     # set method
     def set_memory(self, memory_address, memory_value):
+        memory_address = memory_address.zfill(16)
         memory_value = memory_value.zfill(16)
         self.memory[memory_address] = memory_value
 

@@ -12,7 +12,7 @@ class Devices:
         self._keyboard = None
         self._printer = None
         self._card_reader = None
-        self.other_devices = [None]*29
+        self.other_devices = [None]*32
 
     @property
     def keyboard(self):

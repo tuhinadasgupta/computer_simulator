@@ -88,6 +88,13 @@ class GprAndIxr(ttk.Frame):
                         register.delete("1.0", "end")
                         register.insert("1.0", value)
                         register["state"] = "disabled"
+            else:
+                for register_str, register in register_dict.items():
+                    if register_str == register_name:
+                        register["state"] = "normal"
+                        register.delete("1.0", "end")
+                        register.insert("1.0", '')
+                        register["state"] = "disabled"
 
 
 class OtherMachineRegisters(ttk.Frame):
@@ -163,6 +170,13 @@ class OtherMachineRegisters(ttk.Frame):
                         register.delete("1.0", "end")
                         register.insert("1.0", value)
                         register["state"] = "disabled"
+            else:
+                for register_str, register in register_dict.items():
+                    if register_str == register_name:
+                        register["state"] = "normal"
+                        register.delete("1.0", "end")
+                        register.insert("1.0", '')
+                        register["state"] = "disabled"
 
 
 class SWITCH(ttk.Frame):
@@ -225,12 +239,12 @@ class FunctionButtons(ttk.Frame):
 
         self.controller = None
 
-        tk.Button(self, text="Store", width=5).grid(column=0, row=0)
-        tk.Button(self, text="S+", width=5).grid(column=1, row=0)
-        tk.Button(self, text="Load", width=5).grid(column=2, row=0)
+        tk.Button(self, text="Store", width=5, command=self.store_and_store_plus).grid(column=0, row=0)
+        tk.Button(self, text="S+", width=5, command=lambda: self.store_and_store_plus("S+")).grid(column=1, row=0)
+        tk.Button(self, text="Load", width=5, command=self.load).grid(column=2, row=0)
         tk.Button(self, text="Init", width=5, command=self.init).grid(column=3, row=0)
         tk.Button(self, text="SS", width=5, command=self.single_step).grid(column=0, row=1)
-        tk.Button(self, text="Run", width=5).grid(column=1, row=1)
+        tk.Button(self, text="Run", width=5, command=self.run).grid(column=1, row=1)
 
         halt_frame = ttk.Frame(self, padding=5)
         tk.Label(halt_frame, text="Halt").grid(column=0, row=0)
@@ -260,3 +274,15 @@ class FunctionButtons(ttk.Frame):
     def single_step(self):
         if self.controller:
             self.controller.single_step()
+
+    def store_and_store_plus(self, option_str="Store"):
+        if self.controller:
+            self.controller.store_and_store_plus(option_str)
+
+    def load(self):
+        if self.controller:
+            self.controller.load()
+
+    def run(self):
+        if self.controller:
+            self.controller.run()

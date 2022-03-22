@@ -39,14 +39,14 @@ class Interaction:
                     }
                     self.gpr_and_ixr.on_change(on_change_dict)
         elif register_name == "PC":
-            instruction = instruction[-5:]
+            instruction = instruction[-12:]
             self.control_unit.components.pc = instruction
             on_change_dict = {
                 "PC": self.control_unit.components.pc
             }
             self.other_machine_registers.on_change(on_change_dict)
         elif register_name == "MAR":
-            instruction = instruction[-5:]
+            instruction = instruction[-12:]
             self.control_unit.components.mar = instruction
             on_change_dict = {
                 "MAR": self.control_unit.components.mar
@@ -59,14 +59,60 @@ class Interaction:
             }
             self.other_machine_registers.on_change(on_change_dict)
 
+    def store_and_store_plus(self, option_str):
+        if self.control_unit.components.mar and self.control_unit.components.mbr:
+            location = self.control_unit.components.mar.zfill(16)
+            value = self.control_unit.components.mbr
+            self.control_unit.components.memory.set_memory(location, value)
+            if option_str == "S+":
+                location = bin(int(self.control_unit.components.mar, 2) + 1)[2:].zfill(12)
+                self.control_unit.components.mar = location
+                on_change_dict = {
+                    "MAR": self.control_unit.components.mar
+                }
+                self.other_machine_registers.on_change(on_change_dict)
+        # TODO: either mar or mbr is None, halt.
+        else:
+            print("none")
+            pass
+
+    def load(self):
+        if self.control_unit.components.mar is not None:
+            location = self.control_unit.components.mar.zfill(16)
+            value = self.control_unit.components.memory.get_memory(location)
+            self.control_unit.components.mbr = value
+            on_change_dict = {
+                "MBR": self.control_unit.components.mbr
+            }
+            self.other_machine_registers.on_change(on_change_dict)
+        # TODO: mar is None, halt.
+        else:
+            print("none")
+            pass
+
     def single_step(self):
         instruction_location = self.control_unit.components.pc.zfill(16)
         self.control_unit.components.ir = self.control_unit.components.memory.get_memory(instruction_location)
         instruction = self.control_unit.components.ir
         self.control_unit.components.pc = bin(int(self.control_unit.components.pc, 2) + 1)[2:].zfill(12)
-        data_location = self.control_unit.get_location(instruction)
-        self.control_unit.components.mar = data_location[-12:]
-        self.control_unit.components.mbr = self.control_unit.components.memory.get_memory(data_location)
+        opcode = int(oct(int(instruction[:6], 2))[2:])
+        load_instructions = [1, 3, 4, 5, 41]
+        store_instructions = [2, 42]
+        print(opcode)
+        if opcode in load_instructions:
+            data_location = self.control_unit.get_location(instruction)
+            self.control_unit.components.mar = data_location[-12:]
+            self.control_unit.components.mbr = self.control_unit.components.memory.get_memory(data_location)
+        elif opcode == store_instructions[0]:
+            data_location = self.control_unit.get_location(instruction)
+            self.control_unit.components.mar = data_location[-12:]
+            r = instruction[6:8]
+            self.control_unit.components.mbr = self.control_unit.components.gpr_getter(r)
+        elif opcode == store_instructions[1]:
+            data_location = self.control_unit.get_location(instruction)
+            self.control_unit.components.mar = data_location[-12:]
+            ixr = instruction[8:10]
+            self.control_unit.components.mbr = self.control_unit.components.gpr_getter(ixr)
         self.control_unit.instruction_decoder(instruction)
         on_change_dict = {
             "GPR0": self.control_unit.components.gpr_getter("00"),
@@ -86,7 +132,30 @@ class Interaction:
         self.gpr_and_ixr.on_change(on_change_dict)
         self.other_machine_registers.on_change(on_change_dict)
 
+    def run(self):
+        while True:
+            self.single_step()
+
     def init(self):
+        self.control_unit.reset()
+        on_change_dict = {
+            "GPR0": self.control_unit.components.gpr_getter("00"),
+            "GPR1": self.control_unit.components.gpr_getter("01"),
+            "GPR2": self.control_unit.components.gpr_getter("10"),
+            "GPR3": self.control_unit.components.gpr_getter("11"),
+            "IXR1": self.control_unit.components.ixr_getter("01"),
+            "IXR2": self.control_unit.components.ixr_getter("10"),
+            "IXR3": self.control_unit.components.ixr_getter("11"),
+            "PC": self.control_unit.components.pc,
+            "MAR": self.control_unit.components.mar,
+            "MBR": self.control_unit.components.mbr,
+            "IR": self.control_unit.components.ir,
+            "MFR": self.control_unit.components.mfr,
+            "CC": self.control_unit.alu.get_cc(),
+        }
+        self.gpr_and_ixr.on_change(on_change_dict)
+        self.other_machine_registers.on_change(on_change_dict)
+
         filetypes = (
             ('text files', '*.txt'),
             ('All files', '*.*')

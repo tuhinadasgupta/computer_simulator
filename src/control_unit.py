@@ -27,14 +27,12 @@
 
 from alu import ALU
 from components import Components
-from devices import Devices
 
 
 class ControlUnit:
     def __init__(self) -> None:
         self.alu = ALU()
         self.components = Components()
-        self.devices = Devices()
         self.instructions = {
             0: self.HLT,
             1: self.LDR,
@@ -80,7 +78,6 @@ class ControlUnit:
         ea = ea.zfill(16)
         if instruction[10] == "1" and ea in self.components.memory.get_memory_location():
             ea = self.components.memory.get_memory(ea)
-        print("EA: " + str(ea))
         return ea
 
     def get_location(self, instruction):
@@ -99,6 +96,7 @@ class ControlUnit:
         ea = self._calculate_ea(instruction)
         r = instruction[6:8]
         value = self.components.gpr_getter(r)
+        print(ea + " " + value)
         self.components.memory.set_memory(ea, value)
 
     def LDA(self, instruction):
@@ -324,18 +322,38 @@ class ControlUnit:
 
     # TODO: all about devices.
     def IN(self, instruction):
-        pass
+        r = instruction[6:8]
+        device_id = int(instruction[11:16], 2)
+        if device_id == 0:
+            value = self.components.devices.keyboard.zfill(16)
+            self.components.gpr_setter(r, value)
+        elif device_id == 2:
+            value = self.components.devices.card_reader.zfill(16)
+            self.components.gpr_setter(r, value)
+        else:
+            value = self.components.devices.get_other_device(device_id)
+            self.components.gpr_setter(r, value)
 
-    def OUT(self):
-        pass
+    def OUT(self, instruction):
+        r = instruction[6:8]
+        value = self.components.gpr_getter(r)
+        device_id = int(instruction[11:16], 2)
+        if device_id == 1:
+            self.components.devices.printer = value
+        else:
+            self.components.devices.set_other_device(device_id, value)
 
-    def CHK(self):
-        pass
+    def CHK(self, instruction):
+        r = instruction[6:8]
+        device_id = int(instruction[11:16], 2)
+        if 0 <= device_id <= 31:
+            self.components.gpr_setter(r, "1")
+        else:
+            self.components.gpr_setter(r, "0")
 
     def instruction_decoder(self, instruction):
         # ea = self._calculate_ea(instruction)
         opcode = int(oct(int(instruction[:6], 2))[2:])
-        print(instruction)
         self.instructions.get(opcode)(instruction)
 
     def reset(self):

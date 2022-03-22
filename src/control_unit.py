@@ -72,15 +72,22 @@ class ControlUnit:
         if instruction[8:10] == "00":
             ea = instruction[11:16]
         else:
-            ea = bin(int(instruction[11:16], 2) +
-                     int(self.components.ixr_getter(instruction[8:10]), 2))[2:].zfill(5)
-        if instruction[10] == "1":
+            if self.components.ixr_getter(instruction[8:10]) is not None:
+                ea = bin(int(instruction[11:16], 2) +
+                         int(self.components.ixr_getter(instruction[8:10]), 2))[2:].zfill(5)
+            else:
+                ea = instruction[11:16]
+        ea = ea.zfill(16)
+        if instruction[10] == "1" and ea in self.components.memory.get_memory_location():
             ea = self.components.memory.get_memory(ea)
         print("EA: " + str(ea))
         return ea
 
-    def HLT(self):
-        pass
+    def get_location(self, instruction):
+        return self._calculate_ea(instruction)
+
+    def HLT(self, instruction):
+        print("halt")
 
     def LDR(self, instruction):
         ea = self._calculate_ea(instruction)
@@ -95,7 +102,7 @@ class ControlUnit:
         self.components.memory.set_memory(ea, value)
 
     def LDA(self, instruction):
-        ea = self._calculate_ea(instruction).zfill(16)
+        ea = self._calculate_ea(instruction)
         r = instruction[6:8]
         self.components.gpr_setter(r, ea)
 
@@ -327,7 +334,8 @@ class ControlUnit:
 
     def instruction_decoder(self, instruction):
         # ea = self._calculate_ea(instruction)
-        opcode = oct(int(instruction[:6], 2))[2:]
+        opcode = int(oct(int(instruction[:6], 2))[2:])
+        print(instruction)
         self.instructions.get(opcode)(instruction)
 
     def reset(self):
@@ -335,8 +343,5 @@ class ControlUnit:
         self.alu.reset_cc("OVERFLOW", "UNDERFLOW", "DIVZERO", "EQUALORNOT")
 
     def test(self):
-        self.components.gpr_setter("00", "1011001100000000")
-        self.components.gpr_setter("01", "111111111111")
-        x = self.components.gpr_getter("00")
-        y = self.components.gpr_getter("01")
-        return self.alu.rotate(x, "10", "1")
+        self.instruction_decoder("1000010010101000")
+        print("done")

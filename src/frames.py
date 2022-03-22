@@ -69,8 +69,7 @@ class GprAndIxr(ttk.Frame):
         if self.controller:
             self.controller.load_to_register(register_name)
 
-    def on_change(self, register_name, value):
-        value = " ".join(value)
+    def on_change(self, on_change_dict):
         register_dict = {
             "GPR0": self.gpr0,
             "GPR1": self.gpr1,
@@ -80,12 +79,15 @@ class GprAndIxr(ttk.Frame):
             "IXR2": self.ixr2,
             "IXR3": self.ixr3
         }
-        for register_str, register in register_dict.items():
-            if register_str == register_name:
-                register["state"] = "normal"
-                register.delete("1.0", "end")
-                register.insert("1.0", value)
-                register["state"] = "disabled"
+        for register_name, value in on_change_dict.items():
+            if value is not None:
+                value = " ".join(str(value))
+                for register_str, register in register_dict.items():
+                    if register_str == register_name:
+                        register["state"] = "normal"
+                        register.delete("1.0", "end")
+                        register.insert("1.0", value)
+                        register["state"] = "disabled"
 
 
 class OtherMachineRegisters(ttk.Frame):
@@ -117,24 +119,21 @@ class OtherMachineRegisters(ttk.Frame):
 
         # ir
         tk.Label(self, text="IR").grid(column=0, row=3, sticky="w")
-        ir = tk.Text(self, width="32", height="1", padx=2,
-                     borderwidth=2, relief=tk.SUNKEN)
-        ir.configure(state='disabled')
-        ir.grid(column=1, row=3, padx="10", sticky="w")
+        self.ir = tk.Text(self, width="32", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.ir.configure(state='disabled')
+        self.ir.grid(column=1, row=3, padx="10", sticky="w")
 
         # mfr
         tk.Label(self, text="MFR").grid(column=0, row=4, sticky="w")
-        mfr = tk.Text(self, width="8", height="1", padx=2,
-                      borderwidth=2, relief=tk.SUNKEN)
-        mfr.configure(state='disabled')
-        mfr.grid(column=1, row=4, padx="10", sticky="w")
+        self.mfr = tk.Text(self, width="8", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.mfr.configure(state='disabled')
+        self.mfr.grid(column=1, row=4, padx="10", sticky="w")
 
         # cc
         tk.Label(self, text="CC").grid(column=0, row=5, sticky="w")
-        cc = tk.Text(self, width="4", height="1", padx=2,
-                     borderwidth=2, relief=tk.SUNKEN)
-        cc.configure(state='disabled')
-        cc.grid(column=1, row=5, padx="10", sticky="w")
+        self.cc = tk.Text(self, width="4", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.cc.configure(state='disabled')
+        self.cc.grid(column=1, row=5, padx="10", sticky="w")
 
     def set_controller(self, controller):
         """
@@ -148,19 +147,22 @@ class OtherMachineRegisters(ttk.Frame):
         if self.controller:
             self.controller.load_to_register(register_name)
 
-    def on_change(self, register_name, value):
-        value = " ".join(value)
+    def on_change(self, on_change_dict):
         register_dict = {
             "PC": self.pc,
             "MAR": self.mar,
-            "MBR": self.mbr
+            "MBR": self.mbr,
+            "IR": self.ir
         }
-        for register_str, register in register_dict.items():
-            if register_str == register_name:
-                register["state"] = "normal"
-                register.delete("1.0", "end")
-                register.insert("1.0", value)
-                register["state"] = "disabled"
+        for register_name, value in on_change_dict.items():
+            if value is not None:
+                value = " ".join(str(value))
+                for register_str, register in register_dict.items():
+                    if register_str == register_name:
+                        register["state"] = "normal"
+                        register.delete("1.0", "end")
+                        register.insert("1.0", value)
+                        register["state"] = "disabled"
 
 
 class SWITCH(ttk.Frame):
@@ -227,7 +229,7 @@ class FunctionButtons(ttk.Frame):
         tk.Button(self, text="S+", width=5).grid(column=1, row=0)
         tk.Button(self, text="Load", width=5).grid(column=2, row=0)
         tk.Button(self, text="Init", width=5, command=self.init).grid(column=3, row=0)
-        tk.Button(self, text="SS", width=5).grid(column=0, row=1)
+        tk.Button(self, text="SS", width=5, command=self.single_step).grid(column=0, row=1)
         tk.Button(self, text="Run", width=5).grid(column=1, row=1)
 
         halt_frame = ttk.Frame(self, padding=5)
@@ -254,3 +256,7 @@ class FunctionButtons(ttk.Frame):
     def init(self):
         if self.controller:
             self.controller.init()
+
+    def single_step(self):
+        if self.controller:
+            self.controller.single_step()

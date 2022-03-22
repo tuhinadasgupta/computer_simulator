@@ -13,6 +13,10 @@ class Memory:
         self.memory = {}
         self.is_expended = False
 
+    # get memory location
+    def get_memory_location(self):
+        return self.memory.keys()
+
     # get method
     def get_memory(self, memory_address):
         return self.memory[memory_address]

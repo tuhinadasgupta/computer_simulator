@@ -57,20 +57,20 @@ class Components:
     # getter and setter for ixr
     def ixr_getter(self, ix):
         if ix == "01":
-            return self._ixr[1].value
+            return self._ixr[0].value
         elif ix == "10":
-            return self._ixr[2].value
+            return self._ixr[1].value
         elif ix == "11":
-            return self._ixr[3].value
+            return self._ixr[2].value
 
     def ixr_setter(self, ix, value):
         value = value.zfill(16)
         if ix == "01":
-            self._ixr[1].value = value
+            self._ixr[0].value = value
         elif ix == "10":
-            self._ixr[2].value = value
+            self._ixr[1].value = value
         elif ix == "11":
-            self._ixr[3].value = value
+            self._ixr[2].value = value
 
     # getter and setter for pc
     @property

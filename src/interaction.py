@@ -9,6 +9,41 @@ class Interaction:
         self.switch = switch
         self.function_buttons = function_buttons
 
+    def load_to_register(self, register_name):
+        instruction = self.switch.get_switch()
+        gpr_dict = {
+            "GPR0": "00",
+            "GPR1": "01",
+            "GPR2": "10",
+            "GPR3": "11"
+        }
+        ixr_dict = {
+            "IXR1": "01",
+            "IXR2": "10",
+            "IXR3": "11"
+        }
+        if register_name in gpr_dict.keys():
+            for register_str, register in gpr_dict.items():
+                if register_str == register_name:
+                    self.control_unit.components.gpr_setter(register, instruction)
+                    self.gpr_and_ixr.on_change(register_str, self.control_unit.components.gpr_getter(register))
+        elif register_name in ixr_dict.keys():
+            for register_str, register in ixr_dict.items():
+                if register_str == register_name:
+                    self.control_unit.components.ixr_setter(register, instruction)
+                    self.gpr_and_ixr.on_change(register_str, self.control_unit.components.ixr_getter(register))
+        elif register_name == "PC":
+            instruction = instruction[-5:]
+            self.control_unit.components.pc = instruction
+            self.other_machine_registers.on_change("PC", self.control_unit.components.pc)
+        elif register_name == "MAR":
+            instruction = instruction[-5:]
+            self.control_unit.components.mar = instruction
+            self.other_machine_registers.on_change("MAR", self.control_unit.components.mar)
+        elif register_name == "MBR":
+            self.control_unit.components.mbr = instruction
+            self.other_machine_registers.on_change("MBR", self.control_unit.components.mbr)
+
     def init(self):
         filetypes = (
             ('text files', '*.txt'),
@@ -17,7 +52,7 @@ class Interaction:
 
         filename = fd.askopenfilename(
             title='Open a file',
-            initialdir='/',
+            initialdir='/Users/ygao1/machine_simulator/test',
             filetypes=filetypes)
 
         dataframe = {}

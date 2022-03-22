@@ -10,59 +10,52 @@ class GprAndIxr(ttk.Frame):
 
         # gpr0
         tk.Label(self, text="GPR 0").grid(column=0, row=0, sticky="w")
-        gpr0 = tk.Text(self, width="32", height="1", padx=2,
-                       borderwidth=2, relief=tk.SUNKEN)
-        gpr0.configure(state='disabled')
-        gpr0.grid(column=1, row=0, padx="10")
-        tk.Button(self, text="LD").grid(column=2, row=0)
+        self.gpr0 = tk.Text(self, width="32", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.gpr0.configure(state='disabled')
+        self.gpr0.grid(column=1, row=0, padx="10")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("GPR0")).grid(column=2, row=0)
 
         # gpr1
         tk.Label(self, text="GPR 1").grid(column=0, row=1, sticky="w")
-        gpr1 = tk.Text(self, width="32", height="1", padx=2,
-                       borderwidth=2, relief=tk.SUNKEN)
-        gpr1.configure(state='disabled')
-        gpr1.grid(column=1, row=1, padx="10")
-        tk.Button(self, text="LD").grid(column=2, row=1)
+        self.gpr1 = tk.Text(self, width="32", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.gpr1.configure(state='disabled')
+        self.gpr1.grid(column=1, row=1, padx="10")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("GPR1")).grid(column=2, row=1)
 
         # gpr2
         tk.Label(self, text="GPR 2").grid(column=0, row=2, sticky="w")
-        gpr2 = tk.Text(self, width="32", height="1", padx=2,
-                       borderwidth=2, relief=tk.SUNKEN)
-        gpr2.configure(state='disabled')
-        gpr2.grid(column=1, row=2, padx="10")
-        tk.Button(self, text="LD").grid(column=2, row=2)
+        self.gpr2 = tk.Text(self, width="32", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.gpr2.configure(state='disabled')
+        self.gpr2.grid(column=1, row=2, padx="10")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("GPR2")).grid(column=2, row=2)
 
         # gpr3
         tk.Label(self, text="GPR 3").grid(column=0, row=3, sticky="w")
-        gpr3 = tk.Text(self, width="32", height="1", padx=2,
-                       borderwidth=2, relief=tk.SUNKEN)
-        gpr3.configure(state='disabled')
-        gpr3.grid(column=1, row=3, padx="10")
-        tk.Button(self, text="LD").grid(column=2, row=3)
+        self.gpr3 = tk.Text(self, width="32", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.gpr3.configure(state='disabled')
+        self.gpr3.grid(column=1, row=3, padx="10")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("GPR3")).grid(column=2, row=3)
 
         # ixr1
         tk.Label(self, text="IXR 1").grid(column=0, row=4, sticky="w")
-        ixr1 = tk.Text(self, width="32", height="1", padx=2,
-                       borderwidth=2, relief=tk.SUNKEN)
-        ixr1.configure(state='disabled')
-        ixr1.grid(column=1, row=4, padx="10")
-        tk.Button(self, text="LD").grid(column=2, row=4)
+        self.ixr1 = tk.Text(self, width="32", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.ixr1.configure(state='disabled')
+        self.ixr1.grid(column=1, row=4, padx="10")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("IXR1")).grid(column=2, row=4)
 
         # ixr2
         tk.Label(self, text="IXR 2").grid(column=0, row=5, sticky="w")
-        ixr2 = tk.Text(self, width="32", height="1", padx=2,
-                       borderwidth=2, relief=tk.SUNKEN)
-        ixr2.configure(state='disabled')
-        ixr2.grid(column=1, row=5, padx="10")
-        tk.Button(self, text="LD").grid(column=2, row=5)
+        self.ixr2 = tk.Text(self, width="32", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.ixr2.configure(state='disabled')
+        self.ixr2.grid(column=1, row=5, padx="10")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("IXR2")).grid(column=2, row=5)
 
         # ixr3
         tk.Label(self, text="IXR 3").grid(column=0, row=6, sticky="w")
-        ixr3 = tk.Text(self, width="32", height="1", padx=2,
-                       borderwidth=2, relief=tk.SUNKEN)
-        ixr3.configure(state='disabled')
-        ixr3.grid(column=1, row=6, padx="10")
-        tk.Button(self, text="LD").grid(column=2, row=6)
+        self.ixr3 = tk.Text(self, width="32", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.ixr3.configure(state='disabled')
+        self.ixr3.grid(column=1, row=6, padx="10")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("IXR3")).grid(column=2, row=6)
 
     def set_controller(self, controller):
         """
@@ -71,6 +64,28 @@ class GprAndIxr(ttk.Frame):
         :return:
         """
         self.controller = controller
+
+    def load_to_register(self, register_name):
+        if self.controller:
+            self.controller.load_to_register(register_name)
+
+    def on_change(self, register_name, value):
+        value = " ".join(value)
+        register_dict = {
+            "GPR0": self.gpr0,
+            "GPR1": self.gpr1,
+            "GPR2": self.gpr2,
+            "GPR3": self.gpr3,
+            "IXR1": self.ixr1,
+            "IXR2": self.ixr2,
+            "IXR3": self.ixr3
+        }
+        for register_str, register in register_dict.items():
+            if register_str == register_name:
+                register["state"] = "normal"
+                register.delete("1.0", "end")
+                register.insert("1.0", value)
+                register["state"] = "disabled"
 
 
 class OtherMachineRegisters(ttk.Frame):
@@ -81,27 +96,24 @@ class OtherMachineRegisters(ttk.Frame):
 
         # pc
         tk.Label(self, text="PC").grid(column=0, row=0, sticky="w")
-        pc = tk.Text(self, width="24", height="1", padx=2,
-                     borderwidth=2, relief=tk.SUNKEN)
-        pc.configure(state='disabled')
-        pc.grid(column=1, row=0, padx="10", sticky="w")
-        tk.Button(self, text="LD").grid(column=2, row=0)
+        self.pc = tk.Text(self, width="24", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.pc.configure(state='disabled')
+        self.pc.grid(column=1, row=0, padx="10", sticky="w")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("PC")).grid(column=2, row=0)
 
         # mar
         tk.Label(self, text="MAR").grid(column=0, row=1, sticky="w")
-        mar = tk.Text(self, width="24", height="1", padx=2,
-                      borderwidth=2, relief=tk.SUNKEN)
-        mar.configure(state='disabled')
-        mar.grid(column=1, row=1, padx="10", sticky="w")
-        tk.Button(self, text="LD").grid(column=2, row=1)
+        self.mar = tk.Text(self, width="24", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.mar.configure(state='disabled')
+        self.mar.grid(column=1, row=1, padx="10", sticky="w")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("MAR")).grid(column=2, row=1)
 
         # mbr
         tk.Label(self, text="MBR").grid(column=0, row=2, sticky="w")
-        mbr = tk.Text(self, width="32", height="1", padx=2,
-                      borderwidth=2, relief=tk.SUNKEN)
-        mbr.configure(state='disabled')
-        mbr.grid(column=1, row=2, padx="10", sticky="w")
-        tk.Button(self, text="LD").grid(column=2, row=2)
+        self.mbr = tk.Text(self, width="32", height="1", padx=2, borderwidth=2, relief=tk.SUNKEN)
+        self.mbr.configure(state='disabled')
+        self.mbr.grid(column=1, row=2, padx="10", sticky="w")
+        tk.Button(self, text="LD", command=lambda: self.load_to_register("MBR")).grid(column=2, row=2)
 
         # ir
         tk.Label(self, text="IR").grid(column=0, row=3, sticky="w")
@@ -109,7 +121,6 @@ class OtherMachineRegisters(ttk.Frame):
                      borderwidth=2, relief=tk.SUNKEN)
         ir.configure(state='disabled')
         ir.grid(column=1, row=3, padx="10", sticky="w")
-        tk.Button(self, text="LD").grid(column=2, row=3)
 
         # mfr
         tk.Label(self, text="MFR").grid(column=0, row=4, sticky="w")
@@ -133,6 +144,24 @@ class OtherMachineRegisters(ttk.Frame):
         """
         self.controller = controller
 
+    def load_to_register(self, register_name):
+        if self.controller:
+            self.controller.load_to_register(register_name)
+
+    def on_change(self, register_name, value):
+        value = " ".join(value)
+        register_dict = {
+            "PC": self.pc,
+            "MAR": self.mar,
+            "MBR": self.mbr
+        }
+        for register_str, register in register_dict.items():
+            if register_str == register_name:
+                register["state"] = "normal"
+                register.delete("1.0", "end")
+                register.insert("1.0", value)
+                register["state"] = "disabled"
+
 
 class SWITCH(ttk.Frame):
     def __init__(self, master):
@@ -142,32 +171,31 @@ class SWITCH(ttk.Frame):
 
         # opcode
         tk.Label(self, text="Operation").grid(column=0, row=0, sticky="S")
-        opcode = ttk.Entry(self, width=10)
-        opcode.grid(column=0, row=1, sticky="N")
-        # opcode.bind("<FocusOut>", self.on_focus_out)
+        self.opcode = ttk.Entry(self, width=10)
+        self.opcode.grid(column=0, row=1, sticky="N")
 
-        # gpr
+        # r
         tk.Label(self, text="GPR").grid(column=1, row=0, sticky="S")
-        gpr = ttk.Entry(self, width=6)
-        gpr.grid(column=1, row=1, sticky="N")
+        self.r = ttk.Entry(self, width=6)
+        self.r.grid(column=1, row=1, sticky="N")
         # gpr.bind("<FocusOut>", self.on_focus_out)
 
         # ixr
         tk.Label(self, text="IXR").grid(column=2, row=0, sticky="S")
-        ixr = ttk.Entry(self, width=6)
-        ixr.grid(column=2, row=1, sticky="N")
+        self.ixr = ttk.Entry(self, width=6)
+        self.ixr.grid(column=2, row=1, sticky="N")
         # ixr.bind("<FocusOut>", self.on_focus_out)
 
         # i
         tk.Label(self, text="I").grid(column=3, row=0, sticky="S")
-        i = ttk.Entry(self, width=4)
-        i.grid(column=3, row=1, sticky="N")
+        self.i = ttk.Entry(self, width=4)
+        self.i.grid(column=3, row=1, sticky="N")
         # i.bind("<FocusOut>", self.on_focus_out)
 
         # address
         ttk.Label(self, text="Address").grid(column=4, row=0, sticky="S")
-        address = tk.Entry(self, width=8)
-        address.grid(column=4, row=1, sticky="N")
+        self.address = tk.Entry(self, width=8)
+        self.address.grid(column=4, row=1, sticky="N")
         # address.bind("<FocusOut>", self.on_focus_out)
 
     def set_controller(self, controller):
@@ -177,6 +205,16 @@ class SWITCH(ttk.Frame):
         :return:
         """
         self.controller = controller
+
+    def get_switch(self):
+        instruction = self.opcode.get() + \
+                      self.r.get() + \
+                      self.ixr.get() + \
+                      self.i.get() + \
+                      self.address.get()
+        # TODO: add validation for invalid input.
+        if self.controller:
+            return instruction
 
 
 class FunctionButtons(ttk.Frame):
@@ -205,10 +243,6 @@ class FunctionButtons(ttk.Frame):
         halt_frame.grid(column=2, row=1)
         run_frame.grid(column=3, row=1)
 
-    def init(self):
-        if self.controller:
-            self.controller.init()
-
     def set_controller(self, controller):
         """
         Set the controller
@@ -216,3 +250,7 @@ class FunctionButtons(ttk.Frame):
         :return:
         """
         self.controller = controller
+
+    def init(self):
+        if self.controller:
+            self.controller.init()

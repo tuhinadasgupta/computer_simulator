@@ -1,10 +1,10 @@
-############################################################
-# class for registers like gpr, ixr, mar, and mbr...
-# have two initial values ---- size and value
-# size: size of the register
-# value: value that register holds currently.
-# provide the basic methods like get and set...
-############################################################
+"""
+class for registers like gpr, ixr, mar, and mbr...
+have two initial values ---- size and value
+size: size of the register
+value: value that register holds currently.
+provide the basic methods like get and set...
+"""
 
 
 class Register:

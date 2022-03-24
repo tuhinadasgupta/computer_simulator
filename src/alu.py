@@ -1,11 +1,13 @@
 class ALU:
     def __init__(self) -> None:
-        # init condition code:
-        # bit -> condition -> binary
-        # 0 -> OVERFLOW -> 1000
-        # 1 -> UNDERFLOW -> 0100
-        # 2 -> DIVZERO -> 0010
-        # 3 -> EQUALORNOT -> 0001
+        """
+        init condition code:
+        bit -> condition -> binary
+        0 -> OVERFLOW -> 1000
+        1 -> UNDERFLOW -> 0100
+        2 -> DIVZERO -> 0010
+        3 -> EQUALORNOT -> 0001
+        """
         self._condition_code = [0, 0, 0, 0]
 
     def get_cc(self):

@@ -1,10 +1,10 @@
-############################################################
-# class for simple IO
-# keyboard is a console that can get the input from user
-# printer is a console that can print the output
-# card reader is not required for this project
-# other devices are something like console registers, switches, etc
-############################################################
+"""
+class for simple IO
+keyboard is a console that can get the input from user
+printer is a console that can print the output
+card reader is not required for this project
+other devices are something like console registers, switches, etc
+"""
 
 
 class Devices:

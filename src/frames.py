@@ -286,3 +286,52 @@ class FunctionButtons(ttk.Frame):
     def run(self):
         if self.controller:
             self.controller.run()
+
+
+class PrinterAndKeyboard(ttk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+
+        self.controller = None
+
+        tk.Label(self, text="Keyboard").grid(column=0, row=0, sticky="N")
+        self.keyboard = tk.Text(self, height=5, width=50)
+        self.keyboard.grid(column=0, row=1)
+
+        tk.Label(self, text="Printer").grid(column=1, row=0, sticky="N")
+        self.printer = tk.Text(self, height=5, width=50)
+        self.keyboard.configure(state='disabled')
+        self.printer.grid(column=1, row=1)
+
+    def set_controller(self, controller):
+        """
+        Set the controller
+        :param controller:
+        :return:
+        """
+        self.controller = controller
+
+
+class FieldEngineeringConsole(ttk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+
+        self.controller = None
+
+        tk.Label(self, text="Console").grid(column=0, row=0, sticky="N")
+        self.console = tk.Text(self, height=28, width=50)
+        self.console.grid(column=0, row=1)
+
+    def set_controller(self, controller):
+        """
+        Set the controller
+        :param controller:
+        :return:
+        """
+        self.controller = controller
+
+    def on_change(self, value):
+        value = int(value, 2)
+        self.console["state"] = "normal"
+        self.console.insert("1.0", "PC at memory location: "+str(value)+"\n")
+

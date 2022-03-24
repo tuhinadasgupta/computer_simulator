@@ -1,10 +1,10 @@
-############################################################
-# memory implementation
-# use dictionary to hold the data.
-# the key represent the location and the value represent the
-# data in that memory location.
-# provide the basic methods like get and set...
-############################################################
+"""
+memory implementation
+use dictionary to hold the data.
+the key represent the location and the value represent the
+data in that memory location.
+provide the basic methods like get and set...
+"""
 
 
 class Memory:

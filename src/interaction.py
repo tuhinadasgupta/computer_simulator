@@ -2,12 +2,15 @@ from tkinter import filedialog as fd
 
 
 class Interaction:
-    def __init__(self, control_unit, gpr_and_ixr, other_machine_registers, switch, function_buttons):
+    def __init__(self, control_unit, gpr_and_ixr, other_machine_registers, switch, function_buttons,
+                 printer_and_keyboard, field_engineering_console):
         self.control_unit = control_unit
         self.gpr_and_ixr = gpr_and_ixr
         self.other_machine_registers = other_machine_registers
         self.switch = switch
         self.function_buttons = function_buttons
+        self.printer_and_keyboard = printer_and_keyboard
+        self.field_engineering_console = field_engineering_console
 
     def load_to_register(self, register_name):
         instruction = self.switch.get_switch()
@@ -94,11 +97,10 @@ class Interaction:
         instruction_location = self.control_unit.components.pc.zfill(16)
         self.control_unit.components.ir = self.control_unit.components.memory.get_memory(instruction_location)
         instruction = self.control_unit.components.ir
-        self.control_unit.components.pc = bin(int(self.control_unit.components.pc, 2) + 1)[2:].zfill(12)
+        # self.control_unit.components.pc = bin(int(self.control_unit.components.pc, 2) + 1)[2:].zfill(12)
         opcode = int(oct(int(instruction[:6], 2))[2:])
         load_instructions = [1, 3, 4, 5, 41]
         store_instructions = [2, 42]
-        print(opcode)
         if opcode in load_instructions:
             data_location = self.control_unit.get_location(instruction)
             self.control_unit.components.mar = data_location[-12:]
@@ -131,6 +133,7 @@ class Interaction:
         }
         self.gpr_and_ixr.on_change(on_change_dict)
         self.other_machine_registers.on_change(on_change_dict)
+        self.field_engineering_console.on_change(self.control_unit.components.pc)
 
     def run(self):
         while True:

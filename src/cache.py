@@ -1,8 +1,8 @@
-############################################################
-# cache implementation
-# use queue structure to implement the FIFO algorithm.
-# provide the basic methods like get, set, and clear ...
-############################################################
+"""
+cache implementation
+use queue structure to implement the FIFO algorithm.
+provide the basic methods like get, set, and clear ...
+"""
 
 
 from queue import Queue

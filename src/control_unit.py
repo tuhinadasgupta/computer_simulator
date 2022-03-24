@@ -90,6 +90,8 @@ class ControlUnit:
         ea = self._calculate_ea(instruction)
         r = instruction[6:8]
         value = self.components.memory.get_memory(ea)
+        self.components.mar = ea.zfill(12)
+        self.components.mbr = value
         self.components.gpr_setter(r, value)
         self.components.pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
 
@@ -97,12 +99,19 @@ class ControlUnit:
         ea = self._calculate_ea(instruction)
         r = instruction[6:8]
         value = self.components.gpr_getter(r)
+        self.components.mar = ea.zfill(12)
+        if ea in self.components.memory.get_memory_location():
+            self.components.mbr = self.components.memory.get_memory(ea)
+        else:
+            self.components.mbr = None
         self.components.memory.set_memory(ea, value)
         self.components.pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
 
     def LDA(self, instruction):
         ea = self._calculate_ea(instruction)
         r = instruction[6:8]
+        self.components.mar = ea.zfill(12)
+        self.components.mbr = self.components.memory.get_memory(ea)
         self.components.gpr_setter(r, ea)
         self.components.pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
 
@@ -111,6 +120,8 @@ class ControlUnit:
         r = instruction[6:8]
         x = self.components.gpr_getter(r)
         y = self.components.memory.get_memory(ea)
+        self.components.mar = ea.zfill(12)
+        self.components.mbr = self.components.memory.get_memory(ea)
         value = self.alu.add(x, y)
         if value is not None:
             self.components.gpr_setter(r, value)
@@ -125,6 +136,8 @@ class ControlUnit:
         r = instruction[6:8]
         x = self.components.gpr_getter(r)
         y = self.components.memory.get_memory(ea)
+        self.components.mar = ea.zfill(12)
+        self.components.mbr = self.components.memory.get_memory(ea)
         value = self.alu.sub(x, y)
         if value is not None:
             self.components.gpr_setter(r, value)
@@ -211,7 +224,7 @@ class ControlUnit:
     def SOB(self, instruction):
         ea = self._calculate_ea(instruction)
         r = instruction[6:8]
-        value = int(self.components.gpr_getter(r)) - 1
+        value = int(self.components.gpr_getter(r), 2) - 1
         value_bin = bin(value)[2:].zfill(16)
         self.components.gpr_setter(r, value_bin)
         if value > 0:
@@ -341,6 +354,8 @@ class ControlUnit:
         ea = self._calculate_ea(instruction)
         ixr = instruction[8:10]
         value = self.components.memory.get_memory(ea)
+        self.components.mar = ea.zfill(12)
+        self.components.mbr = self.components.memory.get_memory(ea)
         self.components.ixr_setter(ixr, value)
         pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
         self.components.pc = pc
@@ -349,6 +364,11 @@ class ControlUnit:
         ea = self._calculate_ea(instruction)
         ixr = instruction[8:10]
         value = self.components.ixr_getter(ixr)
+        self.components.mar = ea.zfill(12)
+        if ea in self.components.memory.get_memory_location():
+            self.components.mbr = self.components.memory.get_memory(ea)
+        else:
+            self.components.mbr = None
         self.components.memory.set_memory(ea, value)
         pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
         self.components.pc = pc

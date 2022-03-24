@@ -311,6 +311,14 @@ class PrinterAndKeyboard(ttk.Frame):
         """
         self.controller = controller
 
+    def printer_on_change(self, value):
+        self.printer['state'] = 'normal'
+        if self.printer.index('end-1c') != '1.0':
+            self.printer.insert('end', '\n')
+        self.printer.insert('end', "Input Number: {}".format(str(int(value, 2))))
+        self.printer['state'] = 'disabled'
+        self.printer.see(tk.END)
+
 
 class FieldEngineeringConsole(ttk.Frame):
     def __init__(self, master):
@@ -319,7 +327,7 @@ class FieldEngineeringConsole(ttk.Frame):
         self.controller = None
 
         tk.Label(self, text="Console").grid(column=0, row=0, sticky="N")
-        self.console = tk.Text(self, height=28, width=50)
+        self.console = tk.Text(self, height=28, width=50, state="disabled", borderwidth=2, relief=tk.SUNKEN)
         self.console.grid(column=0, row=1)
 
     def set_controller(self, controller):
@@ -330,8 +338,26 @@ class FieldEngineeringConsole(ttk.Frame):
         """
         self.controller = controller
 
-    def on_change(self, value):
-        value = int(value, 2)
-        self.console["state"] = "normal"
-        self.console.insert("1.0", "PC at memory location: "+str(value)+"\n")
+    def write_to_log(self, msg):
+        # num_lines = int(self.console.index('end - 1 line').split('.')[0])
+        # if num_lines % 24 == 0:
+        #     self.console.delete(1.0, 2.0)
+        self.console['state'] = 'normal'
+        if self.console.index('end-1c') != '1.0':
+            self.console.insert('end', '\n')
+        self.console.insert('end', msg)
+        self.console['state'] = 'disabled'
+        self.console.see(tk.END)
+
+    def ss_on_change(self, pc):
+        msg = "PC at memory location: {}\n".format(str(int(pc, 2)))
+        self.write_to_log(msg)
+
+    def init_on_change(self):
+        msg = "Program has been stored into memory.\n"
+        self.write_to_log(msg)
+
+    def load_to_pc(self, pc):
+        msg = "Set PC at memory location: {}.\n".format(str(int(pc, 2)))
+        self.write_to_log(msg)
 

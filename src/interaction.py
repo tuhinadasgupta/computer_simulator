@@ -48,6 +48,7 @@ class Interaction:
                 "PC": self.control_unit.components.pc
             }
             self.other_machine_registers.on_change(on_change_dict)
+            self.field_engineering_console.load_to_pc(self.control_unit.components.pc)
         elif register_name == "MAR":
             instruction = instruction[-12:]
             self.control_unit.components.mar = instruction
@@ -97,24 +98,7 @@ class Interaction:
         instruction_location = self.control_unit.components.pc.zfill(16)
         self.control_unit.components.ir = self.control_unit.components.memory.get_memory(instruction_location)
         instruction = self.control_unit.components.ir
-        # self.control_unit.components.pc = bin(int(self.control_unit.components.pc, 2) + 1)[2:].zfill(12)
         opcode = int(oct(int(instruction[:6], 2))[2:])
-        load_instructions = [1, 3, 4, 5, 41]
-        store_instructions = [2, 42]
-        if opcode in load_instructions:
-            data_location = self.control_unit.get_location(instruction)
-            self.control_unit.components.mar = data_location[-12:]
-            self.control_unit.components.mbr = self.control_unit.components.memory.get_memory(data_location)
-        elif opcode == store_instructions[0]:
-            data_location = self.control_unit.get_location(instruction)
-            self.control_unit.components.mar = data_location[-12:]
-            r = instruction[6:8]
-            self.control_unit.components.mbr = self.control_unit.components.gpr_getter(r)
-        elif opcode == store_instructions[1]:
-            data_location = self.control_unit.get_location(instruction)
-            self.control_unit.components.mar = data_location[-12:]
-            ixr = instruction[8:10]
-            self.control_unit.components.mbr = self.control_unit.components.gpr_getter(ixr)
         self.control_unit.instruction_decoder(instruction)
         on_change_dict = {
             "GPR0": self.control_unit.components.gpr_getter("00"),
@@ -133,7 +117,9 @@ class Interaction:
         }
         self.gpr_and_ixr.on_change(on_change_dict)
         self.other_machine_registers.on_change(on_change_dict)
-        self.field_engineering_console.on_change(self.control_unit.components.pc)
+        self.field_engineering_console.ss_on_change(self.control_unit.components.pc)
+        if opcode == 62:
+            self.printer_and_keyboard.printer_on_change(self.control_unit.components.devices.printer)
 
     def run(self):
         while True:
@@ -180,3 +166,5 @@ class Interaction:
 
         for location, value in dataframe.items():
             self.control_unit.components.memory.set_memory(location, value)
+
+        self.field_engineering_console.init_on_change()

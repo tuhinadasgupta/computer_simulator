@@ -297,10 +297,11 @@ class PrinterAndKeyboard(ttk.Frame):
         tk.Label(self, text="Keyboard").grid(column=0, row=0, sticky="N")
         self.keyboard = tk.Text(self, height=5, width=50)
         self.keyboard.grid(column=0, row=1)
+        self.keyboard.bind('<Return>', self.retrieve_input)
 
         tk.Label(self, text="Printer").grid(column=1, row=0, sticky="N")
         self.printer = tk.Text(self, height=5, width=50)
-        self.keyboard.configure(state='disabled')
+        self.printer.configure(state='disabled')
         self.printer.grid(column=1, row=1)
 
     def set_controller(self, controller):
@@ -311,11 +312,23 @@ class PrinterAndKeyboard(ttk.Frame):
         """
         self.controller = controller
 
+    def retrieve_input(self):
+        input_value = self.keyboard.get("1.0", "end-1c")
+        print(input_value)
+
+    def keyboard_on_change(self):
+        self.printer.delete("1.0", "end")
+        self.printer.insert('end', "Please Enter a Number: ")
+        self.printer.see(tk.END)
+
     def printer_on_change(self, value):
+        value = int(value, 2)
+        if not 48 <= value <= 57:
+            value = chr(value)
         self.printer['state'] = 'normal'
-        if self.printer.index('end-1c') != '1.0':
-            self.printer.insert('end', '\n')
-        self.printer.insert('end', "Input Number: {}".format(str(int(value, 2))))
+        # if self.printer.index('end-1c') != '1.0':
+        #     self.printer.insert('end', '\n')
+        self.printer.insert('end', value)
         self.printer['state'] = 'disabled'
         self.printer.see(tk.END)
 
@@ -349,8 +362,13 @@ class FieldEngineeringConsole(ttk.Frame):
         self.console['state'] = 'disabled'
         self.console.see(tk.END)
 
-    def ss_on_change(self, pc):
-        msg = "PC at memory location: {}\n".format(str(int(pc, 2)))
+    def ss_on_change(self, pc, register_dict, func_name):
+        msg = "PC at memory location: {}.\nExecuting {} instruction.\n".format(str(int(pc, 2)), func_name)
+        for key, value in register_dict.items():
+            if value is None:
+                msg += "{}: None\n".format(key)
+            else:
+                msg += "{}: {}\n".format(key, str(int(value, 2)))
         self.write_to_log(msg)
 
     def init_on_change(self):

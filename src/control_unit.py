@@ -181,6 +181,7 @@ class ControlUnit:
             self.components.pc = ea[4:]
         else:
             pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
+            self.components.pc = pc
 
     def JNE(self, instruction):
         ea = self._calculate_ea(instruction)
@@ -351,7 +352,7 @@ class ControlUnit:
         self.components.pc = pc
 
     def LDX(self, instruction):
-        ea = self._calculate_ea(instruction)
+        ea = instruction[11:16].zfill(16)
         ixr = instruction[8:10]
         value = self.components.memory.get_memory(ea)
         self.components.mar = ea.zfill(12)
@@ -361,7 +362,7 @@ class ControlUnit:
         self.components.pc = pc
 
     def STX(self, instruction):
-        ea = self._calculate_ea(instruction)
+        ea = instruction[11:16].zfill(16)
         ixr = instruction[8:10]
         value = self.components.ixr_getter(ixr)
         self.components.mar = ea.zfill(12)
@@ -411,9 +412,10 @@ class ControlUnit:
         self.components.pc = pc
 
     def instruction_decoder(self, instruction):
-        # ea = self._calculate_ea(instruction)
         opcode = int(oct(int(instruction[:6], 2))[2:])
-        self.instructions.get(opcode)(instruction)
+        self.instructions[opcode](instruction)
+        func_name = self.instructions[opcode].__name__
+        return func_name
 
     def reset(self):
         self.components.reset()

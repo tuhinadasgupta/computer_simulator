@@ -99,8 +99,25 @@ class Interaction:
         self.control_unit.components.ir = self.control_unit.components.memory.get_memory(instruction_location)
         instruction = self.control_unit.components.ir
         opcode = int(oct(int(instruction[:6], 2))[2:])
-        self.control_unit.instruction_decoder(instruction)
-        on_change_dict = {
+        func_name = self.control_unit.instruction_decoder(instruction)
+        on_change_dict_gpr_and_ixr = {
+            "GPR0": self.control_unit.components.gpr_getter("00"),
+            "GPR1": self.control_unit.components.gpr_getter("01"),
+            "GPR2": self.control_unit.components.gpr_getter("10"),
+            "GPR3": self.control_unit.components.gpr_getter("11"),
+            "IXR1": self.control_unit.components.ixr_getter("01"),
+            "IXR2": self.control_unit.components.ixr_getter("10"),
+            "IXR3": self.control_unit.components.ixr_getter("11")
+        }
+        on_change_dict_other_machine_registers = {
+            "PC": self.control_unit.components.pc,
+            "MAR": self.control_unit.components.mar,
+            "MBR": self.control_unit.components.mbr,
+            "IR": self.control_unit.components.ir,
+            "MFR": self.control_unit.components.mfr,
+            # "CC": self.control_unit.alu.get_cc(),
+        }
+        on_change_dict_field_engineering_console = {
             "GPR0": self.control_unit.components.gpr_getter("00"),
             "GPR1": self.control_unit.components.gpr_getter("01"),
             "GPR2": self.control_unit.components.gpr_getter("10"),
@@ -108,17 +125,18 @@ class Interaction:
             "IXR1": self.control_unit.components.ixr_getter("01"),
             "IXR2": self.control_unit.components.ixr_getter("10"),
             "IXR3": self.control_unit.components.ixr_getter("11"),
-            "PC": self.control_unit.components.pc,
             "MAR": self.control_unit.components.mar,
             "MBR": self.control_unit.components.mbr,
-            "IR": self.control_unit.components.ir,
             "MFR": self.control_unit.components.mfr,
-            "CC": self.control_unit.alu.get_cc(),
+            # "CC": self.control_unit.alu.get_cc(),
         }
-        self.gpr_and_ixr.on_change(on_change_dict)
-        self.other_machine_registers.on_change(on_change_dict)
-        self.field_engineering_console.ss_on_change(self.control_unit.components.pc)
-        if opcode == 62:
+        self.gpr_and_ixr.on_change(on_change_dict_gpr_and_ixr)
+        self.other_machine_registers.on_change(on_change_dict_other_machine_registers)
+        self.field_engineering_console.ss_on_change(self.control_unit.components.pc,
+                                                    on_change_dict_field_engineering_console, func_name)
+        if func_name == "IN":
+            self.printer_and_keyboard.keyboard_on_change()
+        if func_name == "OUT":
             self.printer_and_keyboard.printer_on_change(self.control_unit.components.devices.printer)
 
     def run(self):

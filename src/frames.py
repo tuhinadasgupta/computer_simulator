@@ -293,16 +293,20 @@ class PrinterAndKeyboard(ttk.Frame):
         super().__init__(master)
 
         self.controller = None
-
-        tk.Label(self, text="Keyboard").grid(column=0, row=0, sticky="N")
+        self.button_pressed = tk.StringVar()
+        self.columnconfigure(0, weight=5)
+        self.columnconfigure(1, weight=0)
+        tk.Label(self, text="Keyboard").grid(column=0, row=0, columnspan=2, sticky="N")
         self.keyboard = tk.Text(self, height=5, width=50)
-        self.keyboard.grid(column=0, row=1)
-        self.keyboard.bind('<Return>', self.retrieve_input)
+        self.keyboard.grid(column=0, row=1, columnspan=2)
+        self.ok = tk.Button(self, text="OK", width=5, command=lambda: self.button_pressed.set("button pressed"))
+        self.ok.grid(column=1, row=2, sticky="E")
+        tk.Button(self, text="Cancel").grid(column=0, row=2, sticky="E")
 
-        tk.Label(self, text="Printer").grid(column=1, row=0, sticky="N")
-        self.printer = tk.Text(self, height=5, width=50)
+        tk.Label(self, text="Printer").grid(column=2, row=0, sticky="N")
+        self.printer = tk.Text(self, height=7.5, width=50)
         self.printer.configure(state='disabled')
-        self.printer.grid(column=1, row=1)
+        self.printer.grid(column=2, row=1, rowspan="2")
 
     def set_controller(self, controller):
         """
@@ -312,14 +316,12 @@ class PrinterAndKeyboard(ttk.Frame):
         """
         self.controller = controller
 
-    def retrieve_input(self):
-        input_value = self.keyboard.get("1.0", "end-1c")
-        print(input_value)
-
     def keyboard_on_change(self):
+        self.ok.wait_variable(self.button_pressed)
         self.keyboard.delete("1.0", "end")
-        self.keyboard.insert('end', "Please Enter a Number: ")
+        input_value = self.keyboard.get('1.0','end')
         self.keyboard.see(tk.END)
+        return input_value
 
     def printer_on_change(self, value):
         value = int(value, 2)
@@ -363,12 +365,13 @@ class FieldEngineeringConsole(ttk.Frame):
         self.console.see(tk.END)
 
     def ss_on_change(self, pc, register_dict, func_name):
-        msg = "PC at memory location: {}.\nExecuting {} instruction.\n".format(str(int(pc, 2)), func_name)
+        msg = "Executing {} instruction.\n".format(func_name)
         for key, value in register_dict.items():
             if value is None:
                 msg += "{}: None\n".format(key)
             else:
                 msg += "{}: {}\n".format(key, str(int(value, 2)))
+        msg += "PC jump to memory location: {}.\n".format(str(int(pc, 2)))
         self.write_to_log(msg)
 
     def init_on_change(self):
@@ -378,4 +381,3 @@ class FieldEngineeringConsole(ttk.Frame):
     def load_to_pc(self, pc):
         msg = "Set PC at memory location: {}.\n".format(str(int(pc, 2)))
         self.write_to_log(msg)
-

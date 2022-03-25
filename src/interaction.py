@@ -99,7 +99,12 @@ class Interaction:
         self.control_unit.components.ir = self.control_unit.components.memory.get_memory(instruction_location)
         instruction = self.control_unit.components.ir
         opcode = int(oct(int(instruction[:6], 2))[2:])
+
+        if opcode == 61:
+            input_value = self.printer_and_keyboard.keyboard_on_change()
+            self.control_unit.components.devices.keyboard = input_value
         func_name = self.control_unit.instruction_decoder(instruction)
+
         on_change_dict_gpr_and_ixr = {
             "GPR0": self.control_unit.components.gpr_getter("00"),
             "GPR1": self.control_unit.components.gpr_getter("01"),
@@ -130,12 +135,12 @@ class Interaction:
             "MFR": self.control_unit.components.mfr,
             # "CC": self.control_unit.alu.get_cc(),
         }
+
         self.gpr_and_ixr.on_change(on_change_dict_gpr_and_ixr)
         self.other_machine_registers.on_change(on_change_dict_other_machine_registers)
         self.field_engineering_console.ss_on_change(self.control_unit.components.pc,
                                                     on_change_dict_field_engineering_console, func_name)
-        if func_name == "IN":
-            self.printer_and_keyboard.keyboard_on_change()
+
         if func_name == "OUT":
             self.printer_and_keyboard.printer_on_change(self.control_unit.components.devices.printer)
 

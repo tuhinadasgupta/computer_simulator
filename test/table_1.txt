@@ -1,0 +1,152 @@
+  location  opcode    gpr    ixr    i    address
+----------  --------  -----  -----  ---  ----------
+# Program starts at 0x100 == 256
+       256  LDR       1      00     0    20
+       257  STR       1      00     0    12
+       258  JSR       0      00     1    23
+       259  JSR       0      00     1    24
+       260  LDX       0      10     0    19
+       261  LDR       1      00     0    12
+       262  SIR       1      --     -    1 [immed]
+       263  STR       1      00     0    12
+       264  AIR       1      --     -    1 [immed]
+       265  SOB       1      10     0    0
+       266  LDR       0      01     0    0
+       267  STR       0      00     0    10
+       268  SIR       2      --     -    1 [immed]
+       269  STR       2      00     0    12
+       270  LDR       0      00     0    20
+       271  AMR       0      00     0    17
+       272  STR       0      00     0    11
+       273  LDR       2      00     0    20
+       274  SIR       2      --     -    1 [immed]
+       275  STR       2      00     0    15
+       276  LDR       0      00     0    10
+       277  LDR       1      00     1    11
+       278  43        0      01     1    31
+       279  LDR       0      00     1    11
+       280  SMR       0      00     0    10
+       281  JMA       0      00     1    30
+       282  SMR       0      00     1    11
+       283  LDR       2      00     0    12
+       284  43        0      10     1    29
+       285  STR       0      00     0    12
+       286  STR       1      00     0    13
+       287  LDR       0      00     0    20
+       288  SIR       0      --     -    1 [immed]
+       289  STR       0      00     0    20
+       290  SOB       0      00     1    28
+       291  LDR       0      00     0    13
+       292  JSR       0      00     1    25
+       293  LDR       0      00     0    10
+       294  JSR       0      00     1    25
+
+# Subroutine to print "Plz input"
+       512  STR       3      00     0    14
+       513  LDR       3      00     0    23
+       514  AIR       3      --     -    7 [immed]
+       515  STR       3      00     0    13
+       516  LDX       0      10     0    13
+       517  LDA       0      00     0    11
+       518  LDR       2      00     0    16
+       519  STR       2      00     0    15
+       520  LDX       0      01     0    15
+       521  LDR       1      01     0    0
+       522  OUT       1      --     -    1 [DevID]
+       523  AIR       2      --     -    1 [immed]
+       524  SOB       0      10     0    0
+       525  LDR       3      00     0    14
+       526  RFS       --     --     -    0 [immed]
+
+# Subroutine to take input
+       528  STR       3      00     0    14
+       529  LDR       3      00     0    24
+       530  AIR       3      --     -    9 [immed]
+       531  STR       3      00     0    13
+       532  LDX       0      10     0    13
+       533  AIR       3      --     -    16 [immed]
+       534  AIR       3      --     -    7 [immed]
+       535  STR       3      00     0    15
+       536  LDX       0      11     0    15
+       537  CHK       0      --     -    0 [DevID]
+       538  JZ        0      10     0    0
+       539  IN        0      --     -    0 [DevID]
+       540  JZ        0      11     0    0
+       541  OUT       0      --     -    1 [DevID]
+       542  LDR       1      00     0    17
+       543  AMR       1      00     0    12
+       544  STR       1      00     0    11
+       545  LDX       0      01     0    11
+       546  LDR       1      01     0    0
+       547  LDA       2      00     0    10
+       548  MLT       1      10     -    -----
+       549  STR       2      00     0    10
+       550  AMR       0      00     0    10
+       551  SIR       0      --     -    12 [immed]
+       552  SIR       0      --     -    12 [immed]
+       553  SIR       0      --     -    12 [immed]
+       554  SIR       0      --     -    12 [immed]
+       555  STR       0      01     0    0
+       556  JMA       0      10     0    0
+       560  LDA       0      00     0    10
+       561  OUT       0      --     -    1 [DevID]
+       562  LDR       3      00     0    14
+       563  RFS       --     --     -    0 [immed]
+
+# Subroutine to print a number
+       576  STR       0      00     0    15
+       577  STR       3      00     0    15
+       578  LDR       1      00     0    25
+       579  AIR       1      --     -    16 [immed]
+       580  STR       1      00     0    11
+       581  LDX       0      01     0    11
+       582  AIR       1      --     -    5 [immed]
+       583  AIR       1      --     -    0 [immed]
+       584  STR       1      00     0    11
+       585  LDX       0      10     0    11
+       586  JZ        0      10     0    0
+       587  LDA       3      00     0    10
+       588  OUT       3      --     -    1 [DevID]
+       589  LDA       3      00     0    0
+       590  OUT       3      --     -    1 [DevID]
+       591  LDA       2      00     0    10
+       592  DVD       0      10     -    -----
+       593  AIR       1      --     -    24 [immed]
+       594  AIR       1      --     -    24 [immed]
+       595  OUT       1      --     -    1 [DevID]
+       596  JNE       0      01     0    0
+       597  LDR       3      00     0    15
+       598  RFS       --     --     -    0 [immed]
+
+# String of "Plz input"
+      1280  0         0      01     0    16
+      1281  0         0      01     1    12
+      1282  0         0      01     1    26
+      1283  0         0      00     1    0
+      1284  0         0      01     0    9
+      1285  0         0      01     1    14
+      1286  0         0      01     1    16
+      1287  0         0      01     1    21
+      1288  0         0      01     1    20
+      1289  0         0      00     0    10
+      1290  0         0      00     0    0
+
+        10  0         0      00     0    0  var
+        11  0         0      00     0    0  var
+        12  0         0      00     0    0  var
+        13  0         0      00     0    0  var
+        14  0         0      00     0    0  var
+        15  0         0      00     0    0  var
+        16  0500 # pointer to string "Input"
+        17  0600 # pointer to array list of 20 numbers
+        19  0102 # pointer to IO loop
+        20  # loop 20 + 1 times
+        23  # pointer to print input subroutine
+        24  # pointer to read input subroutine
+        25  # pointer to print number subroutine
+        26  0         0      00     0    0
+        27  0         0      00     0    0
+        28  0         1      00     0    14
+        29  0         1      00     0    31
+        30  0         1      00     0    27
+        31  0         1      00     0    26

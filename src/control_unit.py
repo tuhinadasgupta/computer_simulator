@@ -93,6 +93,7 @@ class ControlUnit:
         self.components.mar = ea.zfill(12)
         self.components.mbr = value
         self.components.gpr_setter(r, value)
+        # pc + 1
         self.components.pc = bin(int(self.components.pc, 2) + 1)[2:].zfill(12)
 
     def STR(self, instruction):

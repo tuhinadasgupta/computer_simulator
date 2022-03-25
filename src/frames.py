@@ -317,9 +317,9 @@ class PrinterAndKeyboard(ttk.Frame):
         print(input_value)
 
     def keyboard_on_change(self):
-        self.printer.delete("1.0", "end")
-        self.printer.insert('end', "Please Enter a Number: ")
-        self.printer.see(tk.END)
+        self.keyboard.delete("1.0", "end")
+        self.keyboard.insert('end', "Please Enter a Number: ")
+        self.keyboard.see(tk.END)
 
     def printer_on_change(self, value):
         value = int(value, 2)

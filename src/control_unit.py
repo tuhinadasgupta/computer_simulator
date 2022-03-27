@@ -84,7 +84,8 @@ class ControlUnit:
         return self._calculate_ea(instruction)
 
     def HLT(self, instruction):
-        print("halt")
+        self.function_buttons.halt_canvas.configure(bg="yellow")
+        self.function_buttons.run_canvas.configure(bg="black")
 
     def LDR(self, instruction):
         ea = self._calculate_ea(instruction)

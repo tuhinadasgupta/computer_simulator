@@ -1,3 +1,4 @@
+import re
 import tkinter as tk
 from tkinter import ttk
 
@@ -223,12 +224,31 @@ class SWITCH(ttk.Frame):
         self.controller = controller
 
     def get_switch(self):
-        instruction = self.opcode.get() + \
-                      self.r.get() + \
-                      self.ixr.get() + \
-                      self.i.get() + \
-                      self.address.get()
-        # TODO: add validation for invalid input.
+        opcode_str = self.opcode.get()
+        if (len(opcode_str) != 0 and len(opcode_str) != 6) or re.search("[2-9]", opcode_str) != None:
+                self.controller.field_engineering_console.write_to_log("invalid opcode - length must be 6 and only contain {0,1}")
+        
+        gpr_str = self.r.get()
+        if (len(gpr_str) != 0 and len(gpr_str) != 2) or re.search("[2-9]", gpr_str) != None:
+                self.controller.field_engineering_console.write_to_log("invalid gpr - length must be 2 and only contain {0,1}")
+        
+        ixr_str = self.ixr.get()
+        if (len(ixr_str) != 0 and len(ixr_str) != 2) or re.search("[2-9]", ixr_str) != None:
+                self.controller.field_engineering_console.write_to_log("invalid ixr - length must be 2 and only contain {0,1}")
+        
+        i_str = self.i.get()
+        if (len(i_str) != 0 and len(i_str) != 1) or re.search("[2-9]", i_str) != None:
+                self.controller.field_engineering_console.write_to_log("invalid i - length must be 1 and only contain {0,1}")
+        
+        address_str = self.address.get()
+        if len(address_str) != 5 or re.search("[2-9]", address_str) != None:
+                self.controller.field_engineering_console.write_to_log("invalid address - length must be 5 and only contain {0,1}")
+        
+        instruction = opcode_str + \
+                      gpr_str + \
+                      ixr_str + \
+                      i_str + \
+                      address_str
         if self.controller:
             return instruction
 
@@ -248,13 +268,15 @@ class FunctionButtons(ttk.Frame):
 
         halt_frame = ttk.Frame(self, padding=5)
         tk.Label(halt_frame, text="Halt").grid(column=0, row=0)
-        tk.Canvas(halt_frame, bg="black", height="20",
-                  width="20").grid(column=1, row=0)
+        self.halt_canvas = tk.Canvas(halt_frame, bg="black", height="20",
+                  width="20")
+        self.halt_canvas.grid(column=1, row=0)
 
         run_frame = ttk.Frame(self, padding=5)
         tk.Label(run_frame, text="Run").grid(column=0, row=0)
-        tk.Canvas(run_frame, bg="black", height="20",
-                  width="20").grid(column=1, row=0)
+        self.run_canvas = tk.Canvas(run_frame, bg="black", height="20",
+                  width="20")
+        self.run_canvas.grid(column=1, row=0)
 
         halt_frame.grid(column=2, row=1)
         run_frame.grid(column=3, row=1)

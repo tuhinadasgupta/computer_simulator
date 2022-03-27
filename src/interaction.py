@@ -95,6 +95,8 @@ class Interaction:
             pass
 
     def single_step(self):
+        self.function_buttons.run_canvas.configure(bg="yellow")
+        self.function_buttons.halt_canvas.configure(bg="black")
         instruction_location = self.control_unit.components.pc.zfill(16)
         self.control_unit.components.ir = self.control_unit.components.memory.get_memory(instruction_location)
         instruction = self.control_unit.components.ir
